@@ -4,35 +4,43 @@ const auto intComparator = [](int a, int b) { return a > b; };
 
 template <typename T, typename Compare>
 void sort(T* first, T* last, Compare comp) {
-    int length = last - first + 1;
-    if (length > 1) {
-        int i = 0;
-        int j = last - first;
+	while (first < last) {
+		int length = last - first + 1;
+		if (length > 1) {
+			int i = 0;
+			int j = last - first;
 
-        if (length <= 12) {
-            insertionSort(first, last, comp);
-            return;
-        }
+			if (length <= 12) {
+				insertionSort(first, last, comp);
+				return;
+			}
 
-        T pivot = median(first, last, comp);
+			T pivot = median(first, last, comp);
 
-        do {
-            while (comp(pivot, first[i]))
-                i++;
-            while (comp(first[j], pivot))
-                j--;
-            if (i <= j) {
-                std::swap(first[i], first[j]);
-                i++;
-                if (j > 0) {
-                    j--;
-                }
-            }
-        } while (i <= j);
+			do {
+				while (comp(pivot, first[i]))
+					i++;
+				while (comp(first[j], pivot))
+					j--;
+				if (i <= j) {
+					std::swap(first[i], first[j]);
+					i++;
+					if (j > 0) {
+						j--;
+					}
+				}
+			} while (i <= j);
 
-        sort(first, first + j, comp);
-        sort(first + i, last, comp);
-    }
+			if (j < length + i) {
+				sort(first, first + j, comp);
+				first = first + i + 1;
+			}
+			else {
+				sort(first + i, last, comp);
+				last = first + i - 1;
+			}
+		}
+	}
 }
 
 template<typename T, typename Compare>
